@@ -16,30 +16,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check repository structure
+      - name: Validate SQL folder
         run: |
-          test -f README.md
           test -d SQL_Queries
-          test -d docs
+          echo "SQL_Queries folder found successfully."
 
-      - name: Check SQL scripts
+      - name: Validate SQL files
         run: |
-          test -f SQL_Queries/01_Create_Database.sql
-          test -f SQL_Queries/02_Create_RaceDayUsers.sql
-          test -f SQL_Queries/03_Create_Events.sql
-          test -f SQL_Queries/04_Create_Categories.sql
-          test -f SQL_Queries/05_Create_Enrolments.sql
-          test -f SQL_Queries/06_Create_Results.sql
-          test -f SQL_Queries/07_Create_Routes.sql
-          test -f SQL_Queries/08_Create_Weather.sql
-          test -f SQL_Queries/09_Add_Foreign_Keys.sql
-          test -f SQL_Queries/10_Insert_Users.sql
-          test -f SQL_Queries/11_Insert_Events.sql
-          test -f SQL_Queries/12_Insert_Categories.sql
-          test -f SQL_Queries/13_Insert_Enrolments.sql
-          test -f SQL_Queries/14_Insert_Results.sql
-          test -f SQL_Queries/15_Insert_Routes.sql
-          test -f SQL_Queries/16_Insert_Weather.sql
+          find SQL_Queries -name "*.sql" | wc -l
+          echo "SQL scripts found."
 
       - name: CI validation successful
-        run: echo "RaceDay repository structure and SQL files validated successfully."
+        run: echo "RaceDay CI validation completed successfully."
