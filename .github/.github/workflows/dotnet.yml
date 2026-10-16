@@ -1,1 +1,49 @@
 
+name: RaceDay Part 1 Checks
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  validate-part1:
+    name: Validate Part 1 Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check required documentation
+        run: |
+          test -f README.md
+          test -f docs/API_Endpoint_Plan.md
+
+          if ! find docs -maxdepth 1 -type f \
+            \( -iname "*.png" -o -iname "*.jpg" \
+            -o -iname "*.jpeg" -o -iname "*.drawio" \
+            -o -iname "*.pdf" \) | grep -q .; then
+            echo "ERD file not found in docs/"
+            exit 1
+          fi
+
+      - name: Check SQL scripts
+        run: |
+          test -d SQL_Queries
+
+          count=$(find SQL_Queries -maxdepth 1 \
+            -type f -iname "*.sql" | wc -l)
+
+          echo "Found $count SQL scripts"
+
+          if [ "$count" -eq 0 ]; then
+            echo "No SQL scripts found"
+            exit 1
+          fi
+
+      - name: Report success
+        run: echo "Required Part 1 files were found."
+
